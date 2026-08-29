@@ -1,7 +1,17 @@
+import { headers } from "next/headers";
+
 async function getHealthData() {
-  const response = await fetch("http://localhost:3000/api/health", {
-    cache: "no-store",
-  });
+  const headersList = await headers();
+
+  const host = headersList.get("host");
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+
+  const response = await fetch(
+    `${protocol}://${host}/api/health`,
+    {
+      cache: "no-store",
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch health data");
