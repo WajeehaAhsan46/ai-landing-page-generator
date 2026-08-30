@@ -1,3 +1,4 @@
+import GenerateButton from "@/components/GenerateButton";
 export default function GeneratePage() {
   return (
     <main className="min-h-screen px-6 py-16">
@@ -28,13 +29,25 @@ export default function GeneratePage() {
             placeholder="Example: An AI-powered productivity app for students..."
             className="min-h-40 w-full rounded-xl border border-gray-700 bg-gray-950 p-4 text-white outline-none placeholder:text-gray-500 focus:border-violet-500"
           />
+            <GenerateButton />
 
-          <button
-            type="button"
-            className="mt-5 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white transition hover:bg-violet-500"
-          >
-            Generate with AI
-          </button>
+    <div className="mt-10 border-t border-gray-800 pt-8">
+  <p className="mb-4 text-sm font-medium text-gray-300">
+    Button Motion Demo
+  </p>
+
+  <div className="flex flex-wrap gap-4">
+    <div>
+      <p className="mb-2 text-xs text-gray-500">Success trigger</p>
+      <GenerateButton forceResult="success" />
+    </div>
+
+    <div>
+      <p className="mb-2 text-xs text-gray-500">Error trigger</p>
+      <GenerateButton forceResult="error" />
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </main>

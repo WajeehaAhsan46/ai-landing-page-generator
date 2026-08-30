@@ -34,3 +34,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Button Motion & Interaction Notes
+
+The Generate Landing Page button uses intentional, short transitions to communicate state changes without abrupt visual swaps.
+
+- **Duration:** 300ms for hover, focus, and visual state transitions.
+- **Easing:** `ease-out` is used so interactions begin responsively and settle smoothly.
+- **Loading:** A spinner communicates that generation is in progress.
+- **Success:** A checkmark and success label provide clear completion feedback before returning to the idle state.
+- **Error:** An error icon and "Try Again" label clearly communicate failure and allow the user to retry.
+- **Accessibility:** The button has a visible keyboard focus state, prevents repeated clicks while loading, and supports `prefers-reduced-motion`.
+- **Motion properties:** Animations use transform, opacity, and other compositor-friendly properties rather than layout-changing animations.
