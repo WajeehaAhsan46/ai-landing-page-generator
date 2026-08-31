@@ -45,3 +45,10 @@ The Generate Landing Page button uses intentional, short transitions to communic
 - **Error:** An error icon and "Try Again" label clearly communicate failure and allow the user to retry.
 - **Accessibility:** The button has a visible keyboard focus state, prevents repeated clicks while loading, and supports `prefers-reduced-motion`.
 - **Motion properties:** Animations use transform, opacity, and other compositor-friendly properties rather than layout-changing animations.
+## 3D Experience Performance Note
+
+The 3D experience uses lightweight procedural geometry instead of a large external model, keeping the scene simple and avoiding unnecessary asset downloads. The 3D component is lazy-loaded with a loading fallback, and rendering is capped with a device pixel ratio range of 1–1.5 to reduce GPU workload on high-density screens.
+
+The scene uses a small number of lights and a single low-complexity mesh, which keeps the animation lightweight. Users who prefer reduced motion do not receive the continuous rotation, while the 3D scene and click interaction remain available.
+
+With more time, I would measure the production build with browser performance tools on both desktop and mobile devices and add a static image fallback for especially low-power devices.

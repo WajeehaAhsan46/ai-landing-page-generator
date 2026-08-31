@@ -1,3 +1,4 @@
+import PreviewClient from "@/components/PreviewClient";
 export default function PreviewPage() {
   return (
     <main className="min-h-screen px-6 py-16">
@@ -9,6 +10,7 @@ export default function PreviewPage() {
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           Landing Page Preview
         </h1>
+       <PreviewClient />
 
         <p className="mt-4 max-w-2xl text-lg text-gray-400">
           Preview your AI-generated landing page before publishing it.
