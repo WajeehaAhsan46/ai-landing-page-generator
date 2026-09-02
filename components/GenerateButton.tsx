@@ -6,10 +6,12 @@ type ButtonState = "idle" | "loading" | "success" | "error";
 
 type GenerateButtonProps = {
   forceResult?: "success" | "error";
+  onGenerate?: () => void;
 };
 
 export default function GenerateButton({
   forceResult,
+  onGenerate,
 }: GenerateButtonProps) {
   const [state, setState] = useState<ButtonState>("idle");
 
@@ -35,6 +37,10 @@ export default function GenerateButton({
     }
 
     setState("success");
+
+    if (onGenerate) {
+      onGenerate();
+    }
 
     setTimeout(() => {
       setState("idle");
