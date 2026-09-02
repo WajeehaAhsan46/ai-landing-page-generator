@@ -129,7 +129,13 @@ User's product or business description:
 ${description}
 `;
 
-    const response = await ai.models.generateContent({
+   let response:
+  | Awaited<ReturnType<typeof ai.models.generateContent>>
+  | null = null;
+
+for (let attempt = 1; attempt <= 3; attempt++) {
+  try {
+    response = await ai.models.generateContent({
       model: "gemini-3.6-flash",
       contents: prompt,
       config: {
@@ -137,7 +143,34 @@ ${description}
       },
     });
 
-    const text = response.text;
+    break;
+  } catch (error) {
+    console.error(
+      `Gemini attempt ${attempt} failed:`,
+      error
+    );
+
+    if (attempt === 3) {
+      throw error;
+    }
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, attempt * 2000)
+    );
+  }
+}
+
+if (!response) {
+  return NextResponse.json(
+    {
+      error: "AI service did not return a response.",
+    },
+    { status: 502 }
+  );
+}
+
+const text = response.text;
+    
 
     if (!text) {
       return NextResponse.json(
