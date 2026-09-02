@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GenerateButton from "@/components/GenerateButton";
 
 export default function GeneratePage() {
@@ -16,6 +16,18 @@ export default function GeneratePage() {
     description: string;
   }[];
 } | null>(null);
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const prompt = params.get("prompt");
+
+  if (!prompt) return;
+
+  const timer = setTimeout(() => {
+    setDescription(prompt);
+  }, 0);
+
+  return () => clearTimeout(timer);
+}, []);
 
   function handleGenerate() {
   if (!description.trim()) {
