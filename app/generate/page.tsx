@@ -6,6 +6,16 @@ import GenerateButton from "@/components/GenerateButton";
 export default function GeneratePage() {
   const [description, setDescription] = useState("");
   const [generated, setGenerated] = useState(false);
+  const [landingPage, setLandingPage] = useState<{
+  title: string;
+  badge: string;
+  description: string;
+  cta: string;
+  features: {
+    title: string;
+    description: string;
+  }[];
+} | null>(null);
 
   function handleGenerate() {
   if (!description.trim()) {
@@ -15,33 +25,129 @@ export default function GeneratePage() {
   setGenerated(false);
 
   setTimeout(() => {
-    const landingPage = {
-      description: description.trim(),
-      title: "Build Something Amazing",
-      badge: "AI Powered Solution",
-      cta: "Get Started",
-      features: [
-        {
-          title: "Fast",
-          description: "Launch your idea quickly with an AI-assisted landing page.",
-        },
-        {
-          title: "Modern",
-          description: "Get a clean, responsive design ready for your audience.",
-        },
-        {
-          title: "AI Powered",
-          description: "Transform a simple product idea into compelling page content.",
-        },
-      ],
-    };
+   const text = description.trim().toLowerCase();
 
-    localStorage.setItem(
-      "ai-landing-page",
-      JSON.stringify(landingPage)
-    );
+let title = "Build Something Amazing";
+let badge = "AI Powered Solution";
+let cta = "Get Started";
 
-    setGenerated(true);
+let features = [
+  {
+    title: "Fast",
+    description:
+      "Launch your idea quickly with an AI-assisted landing page.",
+  },
+  {
+    title: "Modern",
+    description:
+      "Get a clean, responsive design ready for your audience.",
+  },
+  {
+    title: "AI Powered",
+    description:
+      "Transform your product idea into compelling landing-page content.",
+  },
+];
+
+if (
+  text.includes("fitness") ||
+  text.includes("workout") ||
+  text.includes("health")
+) {
+  title = "Transform Your Fitness Journey";
+  badge = "AI Fitness Platform";
+  cta = "Start Training";
+
+  features = [
+    {
+      title: "Personalized Workouts",
+      description:
+        "Get workout recommendations designed around your goals.",
+    },
+    {
+      title: "Progress Tracking",
+      description:
+        "Monitor your fitness progress and stay motivated.",
+    },
+    {
+      title: "Smart Coaching",
+      description:
+        "Use intelligent guidance to build better fitness habits.",
+    },
+  ];
+} else if (
+  text.includes("student") ||
+  text.includes("study") ||
+  text.includes("education")
+) {
+  title = "Study Smarter, Achieve More";
+  badge = "AI Student Assistant";
+  cta = "Start Studying";
+
+  features = [
+    {
+      title: "Smart Study Plans",
+      description:
+        "Create personalized study schedules based on your goals.",
+    },
+    {
+      title: "Deadline Tracking",
+      description:
+        "Keep assignments, exams, and important deadlines organized.",
+    },
+    {
+      title: "AI Recommendations",
+      description:
+        "Get intelligent suggestions to make your study time more effective.",
+    },
+  ];
+} else if (
+  text.includes("bakery") ||
+  text.includes("cake") ||
+  text.includes("food") ||
+  text.includes("restaurant")
+) {
+  title = "Make Every Celebration Sweeter";
+  badge = "Premium Food Experience";
+  cta = "Order Now";
+
+  features = [
+    {
+      title: "Custom Designs",
+      description:
+        "Create beautiful products tailored to your special occasion.",
+    },
+    {
+      title: "Fresh Ingredients",
+      description:
+        "Enjoy high-quality ingredients prepared with care.",
+    },
+    {
+      title: "Easy Ordering",
+      description:
+        "Place your order quickly with a simple and convenient experience.",
+    },
+  ];
+}
+
+const newLandingPage = {
+  description: description.trim(),
+  title,
+  badge,
+  cta,
+  features,
+};
+
+setLandingPage(newLandingPage);
+
+localStorage.setItem(
+  "ai-landing-page",
+  JSON.stringify(newLandingPage)
+);
+
+setGenerated(true);
+
+    
   }, 800);
 }
 
@@ -102,11 +208,11 @@ export default function GeneratePage() {
     {/* Hero */}
     <section className="px-6 py-16 text-center sm:px-12 sm:py-20">
       <span className="inline-flex rounded-full bg-violet-100 px-4 py-2 text-sm font-medium text-violet-700">
-        AI Powered Solution
+        {landingPage?.badge}
       </span>
 
       <h2 className="mx-auto mt-6 max-w-3xl text-4xl font-extrabold tracking-tight sm:text-5xl">
-        Build Something Amazing
+        {landingPage?.title}
       </h2>
 
       <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
@@ -117,56 +223,33 @@ export default function GeneratePage() {
         type="button"
         className="mt-8 rounded-xl bg-gray-900 px-7 py-3.5 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-gray-800"
       >
-        Get Started
+       {landingPage?.cta}
       </button>
     </section>
 
     {/* Features */}
-    <section className="border-t border-gray-200 bg-gray-50 px-6 py-12 sm:px-12">
-      <div className="grid gap-5 sm:grid-cols-3">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-lg">
-            ⚡
-          </div>
-
-          <h3 className="mt-5 text-lg font-bold">
-            Fast
-          </h3>
-
-          <p className="mt-2 text-sm leading-6 text-gray-600">
-            Launch your idea quickly with an AI-assisted landing page.
-          </p>
+<section className="border-t border-gray-200 bg-gray-50 px-6 py-12 sm:px-12">
+  <div className="grid gap-5 sm:grid-cols-3">
+    {landingPage?.features.map((feature, index) => (
+      <div
+        key={feature.title}
+        className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-lg">
+          {index === 0 ? "⚡" : index === 1 ? "✦" : "✨"}
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-lg">
-            ✦
-          </div>
+        <h3 className="mt-5 text-lg font-bold">
+          {feature.title}
+        </h3>
 
-          <h3 className="mt-5 text-lg font-bold">
-            Modern
-          </h3>
-
-          <p className="mt-2 text-sm leading-6 text-gray-600">
-            Get a clean, responsive design ready for your audience.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-lg">
-            ✨
-          </div>
-
-          <h3 className="mt-5 text-lg font-bold">
-            AI Powered
-          </h3>
-
-          <p className="mt-2 text-sm leading-6 text-gray-600">
-            Transform a simple product idea into compelling page content.
-          </p>
-        </div>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          {feature.description}
+        </p>
       </div>
-    </section>
+    ))}
+  </div>
+</section>
 
     {/* Benefits */}
     <section className="px-6 py-12 sm:px-12">
