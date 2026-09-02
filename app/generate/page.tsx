@@ -29,138 +29,54 @@ useEffect(() => {
   return () => clearTimeout(timer);
 }, []);
 
-  function handleGenerate() {
+  async function handleGenerate() {
   if (!description.trim()) {
     return;
   }
 
   setGenerated(false);
 
-  setTimeout(() => {
-   const text = description.trim().toLowerCase();
+  try {
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        description: description.trim(),
+      }),
+    });
 
-let title = "Build Something Amazing";
-let badge = "AI Powered Solution";
-let cta = "Get Started";
+    const data = await response.json();
 
-let features = [
-  {
-    title: "Fast",
-    description:
-      "Launch your idea quickly with an AI-assisted landing page.",
-  },
-  {
-    title: "Modern",
-    description:
-      "Get a clean, responsive design ready for your audience.",
-  },
-  {
-    title: "AI Powered",
-    description:
-      "Transform your product idea into compelling landing-page content.",
-  },
-];
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Unable to generate landing page."
+      );
+    }
 
-if (
-  text.includes("fitness") ||
-  text.includes("workout") ||
-  text.includes("health")
-) {
-  title = "Transform Your Fitness Journey";
-  badge = "AI Fitness Platform";
-  cta = "Start Training";
+    const newLandingPage = {
+      description: description.trim(),
+      ...data.landingPage,
+    };
 
-  features = [
-    {
-      title: "Personalized Workouts",
-      description:
-        "Get workout recommendations designed around your goals.",
-    },
-    {
-      title: "Progress Tracking",
-      description:
-        "Monitor your fitness progress and stay motivated.",
-    },
-    {
-      title: "Smart Coaching",
-      description:
-        "Use intelligent guidance to build better fitness habits.",
-    },
-  ];
-} else if (
-  text.includes("student") ||
-  text.includes("study") ||
-  text.includes("education")
-) {
-  title = "Study Smarter, Achieve More";
-  badge = "AI Student Assistant";
-  cta = "Start Studying";
+    setLandingPage(newLandingPage);
 
-  features = [
-    {
-      title: "Smart Study Plans",
-      description:
-        "Create personalized study schedules based on your goals.",
-    },
-    {
-      title: "Deadline Tracking",
-      description:
-        "Keep assignments, exams, and important deadlines organized.",
-    },
-    {
-      title: "AI Recommendations",
-      description:
-        "Get intelligent suggestions to make your study time more effective.",
-    },
-  ];
-} else if (
-  text.includes("bakery") ||
-  text.includes("cake") ||
-  text.includes("food") ||
-  text.includes("restaurant")
-) {
-  title = "Make Every Celebration Sweeter";
-  badge = "Premium Food Experience";
-  cta = "Order Now";
+    localStorage.setItem(
+      "ai-landing-page",
+      JSON.stringify(newLandingPage)
+    );
 
-  features = [
-    {
-      title: "Custom Designs",
-      description:
-        "Create beautiful products tailored to your special occasion.",
-    },
-    {
-      title: "Fresh Ingredients",
-      description:
-        "Enjoy high-quality ingredients prepared with care.",
-    },
-    {
-      title: "Easy Ordering",
-      description:
-        "Place your order quickly with a simple and convenient experience.",
-    },
-  ];
-}
+    setGenerated(true);
+  } catch (error) {
+    console.error("Generation failed:", error);
 
-const newLandingPage = {
-  description: description.trim(),
-  title,
-  badge,
-  cta,
-  features,
-};
-
-setLandingPage(newLandingPage);
-
-localStorage.setItem(
-  "ai-landing-page",
-  JSON.stringify(newLandingPage)
-);
-
-setGenerated(true);
-
-    
-  }, 800);
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Unable to generate landing page. Please try again."
+    );
+  }
 }
 
   return (
